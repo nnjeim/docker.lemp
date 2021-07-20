@@ -28,7 +28,7 @@ Helper to start a service and its related container.
 ```
 
 #### rebuild
-Helper to stop a service and its related container then rebuild an start it.
+Helper to stop a service and its related container then rebuild it.
 ```
 ./helpers/rebuild [service]
 ```
@@ -37,5 +37,5 @@ Helper to stop a service and its related container then rebuild an start it.
 The projects folders should be placed in the app folder
 
 ### Todo List
-* add stud file to create an nginx virtual host
+* script to create a new vhost, issue a certificate and rebuild the web service.
 * application setup helpers. Ex. install laravel, wp...etc...
