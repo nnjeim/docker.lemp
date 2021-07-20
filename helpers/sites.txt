@@ -1,0 +1,10 @@
+laravel.test
+laradmin.test
+api.theemmys.test
+upload.theemmys.test
+bold.test
+chotchkes.test
+crowdfavorite.github.test
+localhost
+127.0.0.1
+::1
