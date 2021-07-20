@@ -1,11 +1,19 @@
 FROM php:7.4-fpm
 
+# PHP CLI & PHP fpm config
+ENV PHP_INI=/usr/local/etc
+
+COPY ./php/php.ini $PHP_INI/php/
+COPY ./php-fpm/php-fpm.conf $PHP_INI/php-fpm.d/
+
+# OS update
 RUN apt update
 RUN apt install apt-transport-https lsb-release ca-certificates wget -y
 RUN wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
 RUN sh -c 'echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list'
 RUN apt update
 
+# PHP modules
 RUN apt install \
     zlib1g-dev \
     libc-dev \
