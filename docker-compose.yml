@@ -1,9 +1,9 @@
-version: "3"
+version: "3.9"
 services:
   # nginx container
   nginx:
     image: nginx
-    container_name: nginx
+    container_name: nginx-${TAG}
     build:
       context: ./nginx
       dockerfile: nginx.dockerfile
@@ -15,34 +15,41 @@ services:
       - ./nginx/log:/var/log/nginx
       - ./app:/var/www/html
     ports:
-      - "80:80"
-      - "443:443"
+      - "${NGINX_HTTP_PORT}:80"
+      - "${NGINX_HTTPS_PORT}:443"
     links:
       - phpfpm
-      - mysql
-      - redis
+    depends_on:
+      redis:
+        condition: service_healthy
+      mysql:
+        condition: service_healthy
   # php-fpm container
   phpfpm:
     image: phpfpm
-    container_name: phpfpm
+    container_name: phpfpm-${TAG}
     build:
       context: ./phpfpm
       dockerfile: phpfpm.dockerfile
+      args:
+        PHP_TAG: ${PHP_TAG}
     platform: linux/arm64/v8
     restart: always
     networks:
       - my-network
     volumes:
       - ./app:/var/www/html
-    links:
-      - mysql
-      - redis
     ports:
-      - "9000:9000"
+      - "${PHP_FPM_PORT}:9000"
+    depends_on:
+      redis:
+        condition: service_healthy
+      mysql:
+        condition: service_healthy
   # MySQL container
   mysql:
     image: mysql
-    container_name: mysql
+    container_name: mysql-${TAG}
     build:
       context: ./mysql
       dockerfile: mysql.dockerfile
@@ -53,28 +60,37 @@ services:
     env_file:
       - ./mysql/mysql.env
     ports:
-      - "3306:3306"
+      - "${MYSQL_PORT}:3306"
     volumes:
       - ./mysql/data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-p${MYSQL_ROOT_PASSWORD}"]
+      timeout: 20s
+      retries: 10
   # Redis container
   redis:
     image: redis
-    container_name: redis
+    container_name: redis-${TAG}
     build:
       context: ./redis
       dockerfile: redis.dockerfile
     platform: linux/arm64/v8
     restart: always
     ports:
-      - "6379:6379"
+      - "${REDIS_PORT}:6379"
     volumes:
       - ./redis/data:/data
     networks:
       - my-network
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 5s
+      timeout: 30s
+      retries: 50
   # phpMyAdmin container
   phpmyadmin:
     image: phpmyadmin
-    container_name: phpmyadmin
+    container_name: phpmyadmin-${TAG}
     build:
       context: ./phpMyAdmin
       dockerfile: phpMyAdmin.dockerfile
@@ -83,11 +99,11 @@ services:
     networks:
       - my-network
     ports:
-      - "8081:80"
+      - "${PHPMYADMIN_HTTP_PORT}:80"
     env_file:
       - ./phpMyAdmin/phpMyAdmin.env
-    depends_on:
-      - mysql
+    links:
+      - mysql:mysql
 # Define networks
 networks:
   my-network:

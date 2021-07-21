@@ -1,10 +1,14 @@
-FROM php:7.4-fpm
+ARG PHP_TAG
+FROM php:${PHP_TAG}-fpm
+
+ENV DEBIAN_FRONTEND=noninteractive
 
 # PHP CLI & PHP fpm config
-ENV PHP_INI=/usr/local/etc
+ENV PHP_CONF=/usr/local/etc
 
-COPY ./php/php.ini $PHP_INI/php/
-COPY ./php-fpm/php-fpm.conf $PHP_INI/php-fpm.d/
+COPY ./php/php.ini $PHP_CONF/php/
+COPY ./php/overrides.ini $PHP_CONF/php/conf.d/
+COPY ./php-fpm/php-fpm.conf $PHP_CONF/php-fpm.d/
 
 # OS update
 RUN apt update
@@ -22,7 +26,7 @@ RUN apt install \
     libedit-dev \
     libxml2-dev \
     libcurl4-openssl-dev \
-    libonig-dev -y
+    libonig-dev -y --no-install-recommends
 
 RUN docker-php-ext-install \
     bcmath \
@@ -58,3 +62,9 @@ ENV COMPOSER_HOME /composer
 ENV PATH ./vendor/bin:/composer/vendor/bin:$PATH
 ENV COMPOSER_ALLOW_SUPERUSER 1
 RUN curl -s https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin/ --filename=composer
+
+# Install git
+RUN apt install git -y --no-install-recommends
+
+# OS Clean
+RUN apt clean; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*

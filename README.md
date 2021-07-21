@@ -12,6 +12,11 @@ Docker containers offering
 * phpmyadmin
 * redis
 
+### Installation
+* copy .env.example into .env
+* Run docker compose build
+* Run docker compose up -d
+
 ### Helpers
 Located in the helpers folder, the helper functions are aliasing one or many docker commands.
 
