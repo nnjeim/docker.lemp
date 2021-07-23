@@ -17,3 +17,4 @@ All notable changes to `docker lemp` will be documented in this file
 - added the global .env file
 - addition of php-cli and php-fpm conf files.
 - enhancement of nginx configuration
+- moved nginx, redis and phpfpm services to alpine3.13 based images

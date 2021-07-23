@@ -1,4 +1,4 @@
-FROM nginx:latest
+FROM nginx:1.20.1-alpine
 
 ENV NGINX_CONF=/etc/nginx
 ENV SSL=/etc/ssl

@@ -33,6 +33,7 @@ services:
       dockerfile: phpfpm.dockerfile
       args:
         PHP_TAG: ${PHP_TAG}
+        TZ: ${TZ}
     platform: linux/arm64/v8
     restart: always
     networks:

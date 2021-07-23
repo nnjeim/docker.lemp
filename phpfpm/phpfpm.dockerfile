@@ -1,7 +1,6 @@
 ARG PHP_TAG
-FROM php:${PHP_TAG}-fpm
-
-ENV DEBIAN_FRONTEND=noninteractive
+ARG TZ
+FROM php:${PHP_TAG}-fpm-alpine3.13
 
 # PHP CLI & PHP fpm config
 ENV PHP_CONF=/usr/local/etc
@@ -10,61 +9,63 @@ COPY ./php/php.ini $PHP_CONF/php/
 COPY ./php/overrides.ini $PHP_CONF/php/conf.d/
 COPY ./php-fpm/php-fpm.conf $PHP_CONF/php-fpm.d/
 
-# OS update
-RUN apt update
-RUN apt install apt-transport-https lsb-release ca-certificates wget -y
-RUN wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
-RUN sh -c 'echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list'
-RUN apt update
+# PHP extensions
+RUN apk add --update --no-cache \
+		$PHPIZE_DEPS \
+		freetype-dev \
+		git \
+		bash \
+		libjpeg-turbo-dev \
+		libpng-dev \
+		libxml2-dev \
+		libzip-dev \
+		libedit-dev \
+		icu-dev \
+		openssh-client \
+		php7-json \
+		php7-openssl \
+		imagemagick \
+		imagemagick-libs \
+		imagemagick-dev \
+		sqlite \
+	&& docker-php-ext-install \
+	    bcmath \
+	    ctype \
+	    iconv \
+	    soap \
+	    sockets \
+	    exif \
+	    pdo \
+	    pdo_mysql \
+	    pcntl \
+	    session \
+	    calendar \
+	    fileinfo \
+	    readline \
+	    tokenizer \
+	    opcache \
+	    intl \
+	    simplexml \
+	    xml \
+	    zip
 
-# PHP modules
-RUN apt install \
-    zlib1g-dev \
-    libc-dev \
-    libzip-dev \
-    libpng-dev \
-    libedit-dev \
-    libxml2-dev \
-    libcurl4-openssl-dev \
-    libonig-dev -y --no-install-recommends
+RUN docker-php-ext-configure gd --with-jpeg --with-freetype \
+	&& docker-php-ext-install gd
 
-RUN docker-php-ext-install \
-    bcmath \
-    ctype \
-    exif \
-    calendar \
-    curl \
-    fileinfo \
-    gd \
-    gettext \
-    json \
-    mbstring \
-    opcache \
-    pcntl \
-    mysqli \
-    pdo_mysql \
-    readline \
-    soap \
-    tokenizer \
-    zip
+RUN printf "\n" | pecl install xdebug \
+    && docker-php-ext-enable --ini-name 20-xdebug.ini.deactivated xdebug
 
-# Install PECL and PEAR extensions
-RUN pecl install \
-    redis \
-    xdebug
+RUN printf "\n" | pecl install imagick \
+    && docker-php-ext-enable --ini-name 20-imagick.ini imagick
 
-# Enable PECL and PEAR extensions
-RUN docker-php-ext-enable \
-    redis
+RUN printf "\n" | pecl install pcov \
+    && docker-php-ext-enable --ini-name 20-pcov.ini pcov
 
-# Install composer
-ENV COMPOSER_HOME /composer
-ENV PATH ./vendor/bin:/composer/vendor/bin:$PATH
-ENV COMPOSER_ALLOW_SUPERUSER 1
-RUN curl -s https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin/ --filename=composer
+RUN printf "\n" | pecl install redis \
+    && docker-php-ext-enable --ini-name 20-redis.ini redis
 
-# Install git
-RUN apt install git -y --no-install-recommends
-
-# OS Clean
-RUN apt clean; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
+# composer
+RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
+	&& php composer-setup.php \
+	&& php -r "unlink('composer-setup.php');" \
+	&& mv composer.phar /usr/bin/composer
