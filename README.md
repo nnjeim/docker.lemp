@@ -13,7 +13,8 @@ Docker containers offering
 * redis
 
 ### Installation
-* copy .env.example into .env
+* Copy .env.example into .env
+* Set the platform to linux/arm64/v8 for mac M1 processors otherwise set it to linux/amd64 
 * Run docker compose build
 * Run docker compose up -d
 

@@ -7,7 +7,7 @@ services:
     build:
       context: ./docker/nginx
       dockerfile: nginx.dockerfile
-    platform: linux/arm64/v8
+    platform: ${PLATFORM}
     restart: always
     networks:
       - my-network
@@ -34,7 +34,7 @@ services:
       args:
         PHP_TAG: ${PHP_TAG}
         TZ: ${TZ}
-    platform: linux/arm64/v8
+    platform: ${PLATFORM}
     restart: always
     networks:
       - my-network
@@ -54,7 +54,7 @@ services:
     build:
       context: ./docker/mysql
       dockerfile: mysql.dockerfile
-    platform: linux/arm64/v8
+    platform: ${PLATFORM}
     restart: always
     networks:
       - my-network
@@ -75,7 +75,7 @@ services:
     build:
       context: ./docker/redis
       dockerfile: redis.dockerfile
-    platform: linux/arm64/v8
+    platform: ${PLATFORM}
     restart: always
     ports:
       - "${REDIS_PORT}:6379"
@@ -95,7 +95,7 @@ services:
     build:
       context: ./docker/phpMyAdmin
       dockerfile: phpMyAdmin.dockerfile
-    platform: linux/arm64/v8
+    platform: ${PLATFORM}
     restart: always
     networks:
       - my-network
