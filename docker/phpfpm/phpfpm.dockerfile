@@ -12,12 +12,25 @@ COPY ./php-fpm/php-fpm.conf $PHP_CONF/php-fpm.d/
 # PHP extensions
 RUN apk add --update --no-cache \
 		$PHPIZE_DEPS \
+        openrc \
 		freetype-dev \
+        curl \
 		git \
 		bash \
+        build-base \
+        libmcrypt-dev \
+        libxml2-dev \
+        pcre-dev \
+        zlib-dev \
+        autoconf \
+        cyrus-sasl-dev \
+        libgsasl-dev \
+        oniguruma-dev \
+        libressl \
+        libressl-dev \
+        procps \
 		libjpeg-turbo-dev \
 		libpng-dev \
-		libxml2-dev \
 		libzip-dev \
 		libedit-dev \
 		icu-dev \
@@ -69,3 +82,13 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
 	&& php composer-setup.php \
 	&& php -r "unlink('composer-setup.php');" \
 	&& mv composer.phar /usr/bin/composer
+
+# supervisor
+RUN apk --no-cache add supervisor
+RUN mkdir -p /etc/supervisor.d
+COPY ./supervisor.d/supervisord.conf /etc/
+COPY ./supervisor.d/conf/*.ini /etc/supervisor.d/
+#RUN /usr/bin/supervisord -n -c /etc/supervisord.conf
+
+RUN mkdir -p /run/openrc
+RUN touch /run/openrc/softlevel
