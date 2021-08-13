@@ -2,7 +2,7 @@ server {
     listen 80;
     listen 443 ssl;
 
-    server_name domain.test;
+    server_name domain.local.test;
 
     ssl_certificate /etc/ssl/certs/_wildcard.pem;
     ssl_certificate_key /etc/ssl/private/_wildcard-key.pem;
