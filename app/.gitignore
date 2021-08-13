@@ -1,3 +1,4 @@
 *
 !.gitignore
-!phpmyadmin/
+!phpmyadmin
+!phpmyadmin/**
