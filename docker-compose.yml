@@ -88,23 +88,6 @@ services:
       interval: 5s
       timeout: 30s
       retries: 50
-  # phpMyAdmin container
-  phpmyadmin:
-    image: phpmyadmin
-    container_name: phpmyadmin-${TAG}
-    build:
-      context: ./docker/phpMyAdmin
-      dockerfile: phpMyAdmin.dockerfile
-    platform: ${PLATFORM}
-    restart: always
-    networks:
-      - my-network
-    ports:
-      - "${PHPMYADMIN_HTTP_PORT}:80"
-    env_file:
-      - ./docker/phpMyAdmin/phpMyAdmin.env
-    links:
-      - mysql:mysql
 # Define networks
 networks:
   my-network:

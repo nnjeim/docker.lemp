@@ -13,11 +13,14 @@ COPY ./php-fpm/php-fpm.conf $PHP_CONF/php-fpm.d/
 RUN apk add --update --no-cache \
 		$PHPIZE_DEPS \
         openrc \
-		freetype-dev \
         curl \
 		git \
 		bash \
         build-base \
+        bzip2-dev \
+        freetype-dev \
+        libwebp-dev \
+        libxpm-dev \
         libmcrypt-dev \
         libxml2-dev \
         pcre-dev \
@@ -48,6 +51,8 @@ RUN apk add --update --no-cache \
 	    soap \
 	    sockets \
 	    exif \
+        bz2 \
+        mysqli \
 	    pdo \
 	    pdo_mysql \
 	    pcntl \

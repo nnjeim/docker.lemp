@@ -5,4 +5,4 @@ if [ -z "$1" ]
     exit
 fi
 
-docker compose start $1
+docker-compose start $1

@@ -1,3 +1,4 @@
+phpmyadmin.test
 laravel.test
 laradmin.test
 api.theemmys.test

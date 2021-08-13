@@ -5,5 +5,5 @@ if [ -z "$1" ]
     exit
 fi
 
-docker compose stop $1
-docker compose up --no-deps --build $1 -d
+docker-compose stop $1
+docker-compose up --no-deps --build -d $1
