@@ -5,11 +5,13 @@ Docker containers offering
 * Mysql database with phpMyAdmin
 * Redis caching
 
+![Docker desktop](./Screenshot.png)
+
 ### Docker services
 * nginx
 * phpfpm
 * mysql
-* phpmyadmin
+* phpmyadmin as nginx host
 * redis
 
 ### Installation

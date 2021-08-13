@@ -22,3 +22,7 @@ All notable changes to `docker lemp` will be documented in this file.
 ## 0.0.5 - 2021-07-26
 - added the projects' source folder SRC in .env defaulted to ./app.
 - restructure of all docker components in the docker folder.
+
+## 0.0.7 - 2021-08-13
+- removed phpMyAdmin container
+- added phpMyAdmin as nginx host
