@@ -56,6 +56,8 @@ RUN apk add --update --no-cache \
 		sockets \
 		exif \
 		bz2 \
+        pdo \
+        pdo_mysql \
 		mysqli \
 		pcntl \
 		session \
