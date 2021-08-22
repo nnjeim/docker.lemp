@@ -55,16 +55,26 @@ RUN apt-get install -y  \
 RUN setcap "cap_net_bind_service=+ep" /usr/bin/php8.0
 
 # php
+ARG OPCACHE
+ARG XDEBUG
+ENV PHP_CONF=/etc/php/8.0
+
 RUN mkdir -p /run/php/
 RUN touch /run/php/php8.0-fpm.pid
 RUN touch /run/php/php8.0-fpm.sock
-
-ENV PHP_CONF=/etc/php/8.0
 
 COPY ./php/php.ini $PHP_CONF/cli/
 COPY ./php/overrides.ini $PHP_CONF/cli/conf.d/
 COPY ./php-fpm/php-fpm.conf $PHP_CONF/fpm/
 COPY ./php-fpm/www.conf $PHP_CONF/fpm/pool.d/
+
+RUN if [ "$OPCACHE" = "0" ] ; \
+    then mv $PHP_CONF/cli/conf.d/10-opcache.ini $PHP_CONF/cli/conf.d/10-opcache.ini.deactivated ; \
+    fi
+
+RUN if [ "$XDEBUG" = "0" ] ; \
+    then mv $PHP_CONF/cli/conf.d/20-xdebug.ini $PHP_CONF/cli/conf.d/20-xdebug.ini.deactivated ; \
+    fi
 
 # nginx
 ENV NGINX_CONF=/etc/nginx
