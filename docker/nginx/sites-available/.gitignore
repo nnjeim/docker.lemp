@@ -1,3 +1,0 @@
-*.conf
-!phpmyadmin.conf
-!.gitignore
