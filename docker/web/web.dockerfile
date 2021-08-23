@@ -88,6 +88,12 @@ COPY ./nginx/ssl/_wildcard-key.pem $SSL/private/_wildcard-key.pem
 COPY ./nginx/conf.d/*.conf $NGINX_CONF/conf.d/
 COPY ./nginx/sites-available/*.conf $NGINX_CONF/sites-enabled/
 
+# composer
+RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
+	&& php composer-setup.php \
+	&& php -r "unlink('composer-setup.php');" \
+	&& mv composer.phar /usr/bin/composer
+
 # supervisor
 COPY ./supervisor/supervisord.conf /etc/supervisor/
 COPY ./supervisor/conf.d/*.ini /etc/supervisor/conf.d/

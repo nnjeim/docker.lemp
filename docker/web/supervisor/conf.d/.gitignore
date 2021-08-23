@@ -1,0 +1,4 @@
+*
+!nginx.ini
+!phpfpm.ini
+!.gitignore
