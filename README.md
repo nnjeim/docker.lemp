@@ -45,5 +45,5 @@ Helper to stop a service and its related container then rebuild it.
 The projects folders should be placed in the app folder
 
 ### Todo List
-* script to create a new vhost, issue a certificate and rebuild the web service.
+* script to create a new vhost and rebuild the web service.
 * application setup helpers. Ex. install laravel, wp...etc...
