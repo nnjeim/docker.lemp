@@ -82,7 +82,9 @@ ENV SSL=/etc/ssl
 
 RUN rm -rf $NGINX_CONF/conf.d/default.conf
 RUN mkdir -p $NGINX_CONF/sites-enabled
+RUN mkdir -p $NGINX_CONF/partials
 COPY ./nginx/conf/nginx.conf $NGINX_CONF/nginx.conf
+COPY ./nginx/partials/* $NGINX_CONF/partials/
 COPY ./nginx/ssl/_wildcard.pem $SSL/certs/_wildcard.pem
 COPY ./nginx/ssl/_wildcard-key.pem $SSL/private/_wildcard-key.pem
 COPY ./nginx/conf.d/*.conf $NGINX_CONF/conf.d/
