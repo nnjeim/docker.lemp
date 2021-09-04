@@ -29,3 +29,6 @@ All notable changes to `docker lemp` will be documented in this file.
 
 ## 0.0.8 - 2021-08-23
 - Combined nginx and phpfpm services into web.
+
+## 0.0.9 - 2021-09-04
+- Rework of the nginx server file by including partial config files.
