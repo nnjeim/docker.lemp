@@ -100,4 +100,10 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
 COPY ./supervisor/supervisord.conf /etc/supervisor/
 COPY ./supervisor/conf.d/*.ini /etc/supervisor/conf.d/
 
+#node
+RUN curl -sL https://deb.nodesource.com/setup_14.x -o nodesource_setup.sh
+RUN bash nodesource_setup.sh
+RUN apt-get install -y nodejs
+RUN npm install -g npm
+
 CMD ["supervisord", "-c", "/etc/supervisor/supervisord.conf"]

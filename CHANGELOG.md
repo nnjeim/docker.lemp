@@ -32,3 +32,6 @@ All notable changes to `docker lemp` will be documented in this file.
 
 ## 0.0.9 - 2021-09-04
 - Rework of the nginx server file by including partial config files.
+
+## 0.1.0 - 2021-10-10
+- added nodejs and npm.
