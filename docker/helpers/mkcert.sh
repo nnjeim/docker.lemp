@@ -7,4 +7,4 @@ while read line; do
 sites+="${line} "
 done < $filename
 
-mkcert -key-file $currentDir/../nginx/ssl/_wildcard-key.pem -cert-file $currentDir/../nginx/ssl/_wildcard.pem $sites
+mkcert -key-file $currentDir/../web/nginx/ssl/_wildcard-key.pem -cert-file $currentDir/../web/nginx/ssl/_wildcard.pem $sites
