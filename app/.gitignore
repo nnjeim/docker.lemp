@@ -1,4 +1,4 @@
 *
 !.gitignore
-!phpmyadmin
-!phpmyadmin/**
+!README.md
+!remoteSync.sh

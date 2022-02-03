@@ -65,7 +65,6 @@ RUN touch /run/php/php8.0-fpm.sock
 
 COPY ./php/php.ini $PHP_CONF/cli/
 COPY ./php/overrides.ini $PHP_CONF/cli/conf.d/
-COPY ./php-fpm/overrides.ini $PHP_CONF/fpm/conf.d/
 COPY ./php-fpm/php-fpm.conf $PHP_CONF/fpm/
 COPY ./php-fpm/www.conf $PHP_CONF/fpm/pool.d/
 
