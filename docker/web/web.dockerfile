@@ -10,6 +10,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 RUN apt-get update -y \
     && apt-get upgrade -y \
     && apt-get install -y \
+    cron \
     gnupg \
     gosu \
     curl \
@@ -64,7 +65,9 @@ RUN touch /run/php/php8.0-fpm.pid
 RUN touch /run/php/php8.0-fpm.sock
 
 COPY ./php/php.ini $PHP_CONF/cli/
+COPY ./php/php.ini $PHP_CONF/fpm/
 COPY ./php/overrides.ini $PHP_CONF/cli/conf.d/
+COPY ./php/overrides.ini $PHP_CONF/fpm/conf.d/
 COPY ./php-fpm/php-fpm.conf $PHP_CONF/fpm/
 COPY ./php-fpm/www.conf $PHP_CONF/fpm/pool.d/
 
@@ -75,6 +78,9 @@ RUN if [ "$OPCACHE" = "0" ] ; \
 RUN if [ "$XDEBUG" = "0" ] ; \
     then mv $PHP_CONF/cli/conf.d/20-xdebug.ini $PHP_CONF/cli/conf.d/20-xdebug.ini.deactivated ; \
     fi
+
+RUN update-alternatives --set php /usr/bin/php8.0
+RUN service php8.0-fpm restart
 
 # nginx
 ENV NGINX_CONF=/etc/nginx
@@ -89,6 +95,8 @@ COPY ./nginx/ssl/_wildcard.pem $SSL/certs/_wildcard.pem
 COPY ./nginx/ssl/_wildcard-key.pem $SSL/private/_wildcard-key.pem
 COPY ./nginx/conf.d/*.conf $NGINX_CONF/conf.d/
 COPY ./nginx/sites-available/*.conf $NGINX_CONF/sites-enabled/
+
+RUN service nginx restart
 
 # composer
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
@@ -105,5 +113,6 @@ RUN curl -sL https://deb.nodesource.com/setup_14.x -o nodesource_setup.sh
 RUN bash nodesource_setup.sh
 RUN apt-get install -y nodejs
 RUN npm install -g npm
+RUN npm install -g @soketi/soketi
 
 CMD ["supervisord", "-c", "/etc/supervisor/supervisord.conf"]
